@@ -17,6 +17,13 @@ To run this tool, you need the following libraries:
 * pymsgbox
 * tqdm
 
+To install these, simply run the requirements.txt file in this repository (after cloning onto your system) using pip 
+```
+pip install -r requirements.txt
+```
+
+Or you can install them separately.
+
 ## How to use: ##
 
 * Clone the repository either by __downloading it as a zip__ and unzipping the folder, or by using git clone into your preferred directory:
