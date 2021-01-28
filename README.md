@@ -26,6 +26,8 @@ Or you can install them separately.
 
 ## How to use: ##
 
+![](example.gif)
+
 * Clone the repository either by __downloading it as a zip__ and unzipping the folder, or by using git clone into your preferred directory:
 ```
 git clone https://github.com/HarishBachu/HandSegmentation.git
