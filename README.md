@@ -1,13 +1,13 @@
 # HandSegmentation
 
-This Project allows you to create your own Hand Dataset using your webcam, for your own mini Gesture Detection Project, or any related applications.
+This project allows you to create your own Hand Dataset using your webcam, for your own mini Gesture Detection Project, or any related applications.
 The Segmentation is sensitive to lighting conditions, and moving objects in the background, work is being done to make the algorithm more robust to these. 
 
 The algorithm uses both motion detection (done by Background Subtraction), and skin detection (by capturing pixels of intensities in some pre-defined range) to isolate skin areas in the webcam feed, frame by frame. The largest contour is extracted from this result, which is used to generate the final mask. In almost all cases, the largest contour turns out to be the Hand itself. 
 
 ## Motivation ##
 
-This Project was motivated by one of my other projects regarding gesture recognition. Not many good datasets are available online for gesture recognition. Finding reliable datasets online, and downloading them was time and data intensive. Ultimately, I had better performance with my own generated dataset, than online datasets. So I decided to make a tool for other Computer Vision enthusiasts to get acquainted with the field. 
+This project was motivated by one of my other projects regarding gesture recognition. Not many good datasets are available online for gesture recognition. Finding reliable datasets online, and downloading them was time and data intensive. Ultimately, I had better performance with my own generated dataset, than online datasets. So I decided to make a tool for other Computer Vision enthusiasts to get acquainted with the field. 
 
 ## Prerequisites: ##
 
