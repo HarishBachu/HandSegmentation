@@ -56,9 +56,9 @@ Enter number of images for your Dataset: (Enter how many images you want here)
 
 5. After entering the number of images, if the packages were installed properly, you should see 2 windows, showing webcam feed. One window will show a normal feed, and the other will show a blurred version. The blurring is done to facitilate the operations done on the image. 
 
-  Find a location with proper lighting conditions for the algorithm to work properly. Make sure there are no moving objects in the background. Once this is done, press the **_'b'_** key on the keyboard to start the segmentation process. You should see a variety of popup windows, each showing some operation on the frame. 
+   Find a location with proper lighting conditions for the algorithm to work properly. Make sure there are no moving objects in the background. Once this is done, press the **_'b'_** key on the keyboard to start the segmentation process. You should see a variety of popup windows, each showing some operation on the frame. 
 
-  The final hand is given by the window named "Final Hand", and the mask for this is given in the window named "Final Mask". 
+   The final hand is given by the window named "Final Hand", and the mask for this is given in the window named "Final Mask". 
 
 6. Once you are ready to start generating your dataset, press the **_'s'_** key on your keyboard. The program will continuously save the processed images in their respective subdirectories, inside the root directory. Once the process is done, a popup window will appear, alreting you that the process is complete.
 
