@@ -29,7 +29,7 @@ pip install -r requirements.txt
 Or you can install them separately.
 
 ## How to use: ##
-
+ 
 ![](example.gif)
 
 1. Clone the repository either by __downloading it as a zip__ and unzipping the folder, or by using __git clone__ into your preferred directory:
