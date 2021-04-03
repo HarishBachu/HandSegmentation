@@ -34,16 +34,22 @@ def makeDirectories(root_dir, dir_list):
         dir_paths.append(dir_path)
     return dir_paths
 
+def nothing(x):
+    pass
 
 if __name__ == "__main__":
 
     root_dir = assignRootDir()          #Creates Root directory
     dir_list = ['frame', 'motionMask', 'motion', 'skinMask', 'skin', 'finalMask', 'finalHand', 'skeleton']      #Sub Directories names
+    
     datapaths = makeDirectories(root_dir, dir_list)     #paths to subdirectories
     # print(datapaths)
     cap = cv2.VideoCapture(0)       #Starts reading data from webcam
+    
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    
+    boundingBox = {'cx': width//2, 'cy': height//2}
     back = np.zeros((height, width, 3))
 
     returnDict = {}                 #Defines empty dictionary for processed images
@@ -55,15 +61,29 @@ if __name__ == "__main__":
     flagSave = False                #Assigns Flag for saving the dataset
     
     num_imgs = int(input("Enter number of images for your Dataset: "))
-
     img_num = 0                     #Img index count starts from 0
 
+    cv2.namedWindow('Box')
+    cv2.createTrackbar('Width', 'Box', 250, width, nothing)
+    cv2.createTrackbar('Height', 'Box', 250, height, nothing)
+
+    boxWidth = 250
+    boxHeight = 250
     while cap.isOpened():
             
+        # boxWidth = cv2.getTrackbarPos('Width', 'Box')
+        # boxHeight = cv2.getTrackbarPos('Height', 'Box')
+
         _, frame = cap.read()           #Data is read frame by frame
+        box = frame.copy()
         blur = cv2.GaussianBlur(frame, (5, 5), cv2.BORDER_DEFAULT)
         drawing = np.zeros((height, width, 3), dtype = np.uint8)
         finalMask = np.zeros((height, width), dtype = np.uint8)
+
+        startCoord = (max(0, boundingBox["cx"] - boxWidth//2), max(0, boundingBox["cy"] - boxHeight//2))
+        endCoord = (min(width, boundingBox["cx"] + boxWidth//2), min(height, boundingBox["cy"] + boxHeight//2))
+
+        cv2.rectangle(box, startCoord, endCoord, 0xFF0000, 1)
 
         returnDict["blur"] = blur
         returnDict["frame"] = frame
@@ -72,7 +92,7 @@ if __name__ == "__main__":
 
         cv2.imshow('Frame', frame)
         cv2.imshow('Blurred', blur)
-
+        cv2.imshow('Box', box)
         key = cv2.waitKey(1) & 0xFF
 
         if key == ord('b'):             #If the 'b' key is pressed, all the processing flags become True, and the segmentation starts
@@ -96,7 +116,7 @@ if __name__ == "__main__":
 
         #Flag for contour extraction
         if flags["flagContour"] == True:
-            returnDict = segment.get_contour(returnDict)
+            returnDict, boundingBox = segment.get_contour(returnDict, boundingBox)
             cv2.imshow('Final Mask', returnDict["finalMask"])
             if "finalHand" in returnDict.keys():
                 cv2.imshow('Final Hand', returnDict["finalHand"])
@@ -111,8 +131,13 @@ if __name__ == "__main__":
         #Flag for saving the images in their respective directories
         if flagSave == True and img_num < num_imgs:
             for dir_name, dir_path in zip(dir_list, datapaths):
-                cv2.imwrite(dir_path + '/' + dir_name + str(img_num) + '.jpg', returnDict[dir_name])
+                if len(returnDict[dir_name].shape) == 3:
+                    img = returnDict[dir_name][startCoord[1]:endCoord[1], startCoord[0]:endCoord[0], :]
+                else:
+                    img = returnDict[dir_name][startCoord[1]:endCoord[1], startCoord[0]:endCoord[0]]
+                cv2.imwrite(dir_path + '/' + dir_name + str(img_num) + '.jpg', img)
             img_num += 1
+            print(img_num)
         
         #Pop up message once all the images are generated
         if img_num == num_imgs:

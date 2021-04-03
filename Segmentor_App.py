@@ -43,34 +43,22 @@ class segmentor:
         return cx, cy
 
     #Detects Moving objects from webcam feed using Background Subtraction
-    #Different Subtraction Algorithms exist, here we have used Opencv's built in MOG2 method.
-    #MOG2 learns the background from previous frames using Gaussian Mixture Models, and the motion
-    #is detected by a simple frame difference
     def detect_motion(self, bgSubtractor, bgSubtractorLr, returnDict):
 
         frame = returnDict["frame"]
         blur = returnDict["blur"]
         motionMask = bgSubtractor.apply(blur, learningRate = bgSubtractorLr)
-
-        #Morphology operations are used to remove small irregularities in the output. 
-        #Opening consists of erosion, followed by dilation of the generated motionMask. 
-        #Closing consists of dilation followed by erosion of the motionMask.
         motionMask = cv2.morphologyEx(motionMask, cv2.MORPH_OPEN, self.kernel)
         motionMask = cv2.morphologyEx(motionMask, cv2.MORPH_CLOSE, self.kernel)
         motionMask = cv2.GaussianBlur(motionMask, (5, 5), cv2.BORDER_DEFAULT)
         _, motionMask = cv2.threshold(motionMask, 200, 255, cv2.THRESH_BINARY)
-
-        #The moving parts in the frame are extracted by applying the generated motionMask
-        #on the frame using logical operations
         motion = cv2.bitwise_and(frame, frame, mask = motionMask)
         
         returnDict["motionMask"] = motionMask
         returnDict["motion"] = motion
         return returnDict
 
-    #Detects Skin Pixels in the YCrCb colorspace (Luminance, Chromium - Red, Chromium - Blue).
-    #YCrCb displays color in terms of brightness. In this colorspace, skin pixels are 
-    #easily identified as they cluster together in the Cb-Cr space.
+    #Detects Skin Pixels in the YCrCb colorspace
     def detect_skin(self, returnDict):
         
         frame = returnDict["frame"]
@@ -88,8 +76,6 @@ class segmentor:
         return returnDict
 
     #Counts the number of fingers from convexity defects information
-    #Convexity Defects refer to "valleys" in the extracted contour.
-    #In this case, convexity defects occur in the "V" shaped space between 2 fingers. 
     def countFingers(self, returnDict):
 
         c = returnDict["c"]
@@ -103,7 +89,7 @@ class segmentor:
         if len(hull):
             defects = cv2.convexityDefects(c, hull)
             cnt = 0
-            if type(defects) != type(None):         #If defects is None, then no fingers are detected i.e count is 0
+            if type(defects) != type(None):
                 for i in range(defects.shape[0]):
                     s, e, f, d = defects[i, 0]
                     start = tuple(c[s, 0])
@@ -120,7 +106,7 @@ class segmentor:
         return False, 0
     
     #Returns the largest contour after motion and skin detection. In most cases, the largest contour is the Hand itself
-    def get_contour(self, returnDict):
+    def get_contour(self, returnDict, boundingBox):
 
         frame = returnDict["frame"]
         skinMask = returnDict["skinMask"]
@@ -146,13 +132,12 @@ class segmentor:
             returnDict["finalMask"] = finalMask
             returnDict["heirarchy"] = heirarchy
 
-        return returnDict
+            boundingBox["cx"] = cx
+            boundingBox["cy"] = cy
+
+        return returnDict, boundingBox
         
     #Returns the skeletonized hand
-    #Erode operation erodes away the boundaries of the mask. 
-    #Here, the erosion kernel is a cross like kernel
-    #This kernel slides over the image, and erodes all the boundaries. Since we have a cross shaped kernel, the result is
-    #made of thin crosses representing a skeletal structure.
     def get_skeleton(self, returnDict):
 
         binary = returnDict["finalMask"]
