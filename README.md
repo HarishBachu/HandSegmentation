@@ -63,3 +63,9 @@ Enter number of images for your Dataset: (Enter how many images you want here)
 6. Once you are ready to start generating your dataset, press the **_'s'_** key on your keyboard. The program will continuously save the processed images in their respective subdirectories, inside the root directory. Once the process is done, a popup window will appear, alreting you that the process is complete.
 
 7. If you wish to quit the program in between, press the **_'q'_** key.
+
+## Future Modifications ##
+
+1. The current method works well, but it requires the room to be well illuminated for accurate segmentation. Otherwise, the results are extremely noisy, and sometimes, it may crop out completely wrong areas of the image. Moreover, we operate under the assumption that the hand is the largest contour, which is not always the case. To overcome this, a novel CNN based architecture can be implemented to extract the required regions to a much better accuracy
+
+2. The current version requires the download of the whole repository, and to run the code manually. However, some (if not most) users may prefer a more Graphical Approach. To remedy this, the whole program can be deployed as a web application (preferably on Heroku). I am currently familiarising myself with concepts of WebDev, and am looking to actively work on this aspect of the project. 
