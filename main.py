@@ -63,9 +63,9 @@ if __name__ == "__main__":
     num_imgs = int(input("Enter number of images for your Dataset: "))
     img_num = 0                     #Img index count starts from 0
 
-    cv2.namedWindow('Box')
-    cv2.createTrackbar('Width', 'Box', 250, width, nothing)
-    cv2.createTrackbar('Height', 'Box', 250, height, nothing)
+    # cv2.namedWindow('Box')
+    # cv2.createTrackbar('Width', 'Box', 250, width, nothing)
+    # cv2.createTrackbar('Height', 'Box', 250, height, nothing)
 
     boxWidth = 250
     boxHeight = 250
